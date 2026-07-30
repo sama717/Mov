@@ -11,3 +11,9 @@ export const getMovie = async (id: string) => {
     if (!res.ok) throw new Error('Failed to fetch movie')
     return res.json()
 }
+
+export const getShowtimes = async (tmdbId: string) => {
+    const res = await fetch(`${BASE_URL}/api/showtimes/${tmdbId}`)
+    if (!res.ok) throw new Error('Failed to fetch showtimes')
+    return res.json()
+}
