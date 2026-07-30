@@ -53,10 +53,9 @@ export const login = async(req: Request, res: Response) => {
             { expiresIn: '7d'}
         );
 
-        res.cookie('token', accessToken, {
+        res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            secure: true,
             sameSite: 'strict'
         });
 
@@ -90,6 +89,6 @@ export const refreshToken = async (req: Request, res: Response) => {
 }
 
 export const logout = async(req: Request, res: Response) => {
-    res.clearCookie('token');
+    res.clearCookie('refreshToken');
     res.json({message: 'Logged out'})
 };
