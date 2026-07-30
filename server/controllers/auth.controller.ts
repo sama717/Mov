@@ -18,7 +18,25 @@ export const signup = async (req: Request, res: Response) => {
             data: {name, email, password: hashed}
         });
 
-        res.status(201).json({message: 'Account created', userId: user.id})
+                const accessToken = jwt.sign(
+            {userId: user.id}, 
+            process.env.JWT_SECRET!,
+            { expiresIn: '15m'}
+        );
+
+        const refreshToken = jwt.sign(
+            {userId: user.id}, 
+            process.env.JWT_REFRESH_SECRET!,
+            { expiresIn: '7d'}
+        );
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'strict'
+        });
+
+        res.status(201).json({ message: 'Account created', accessToken, userId: user.id, name: user.name })
     } catch(e){
         console.error(e);
         res.status(500).json({message: 'Signup failed'})
